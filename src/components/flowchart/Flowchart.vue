@@ -497,8 +497,8 @@ export default {
         .on("end", function () {
           d3.selectAll("#svg > g.guideline").remove();
           for (let currentNode of that.currentNodes) {
-            currentNode.x = Math.round(Math.round(currentNode.x) / 10) * 10;
-            currentNode.y = Math.round(Math.round(currentNode.y) / 10) * 10;
+            currentNode.x = Math.round(Math.round(currentNode.x) / 20) * 20;
+            currentNode.y = Math.round(Math.round(currentNode.y) / 20) * 20;
           }
         });
       g.call(drag);

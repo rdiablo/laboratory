@@ -1,55 +1,55 @@
 <template>
-  <div class="container">
-    <h1 class="title">Flowchart Vue</h1>
-    <h5 class="subtitle">
-      Flowchart & Flowchart designer component for Vue.js.
-    </h5>
-    <div id="toolbar">
-      <button
-        @click="
-          $refs.chart.add({
-            id: +new Date(),
-            x: 10,
-            y: 10,
-            name: 'New',
-            type: 'operation',
-            approvers: [],
-          })
-        "
-      >
-        Add(Double-click canvas)
-      </button>
-      <button @click="$refs.chart.remove()">Delete(Del)</button>
-      <button @click="$refs.chart.editCurrent()">
-        Edit(Double-click node)
-      </button>
-      <button @click="$refs.chart.save()">Save</button>
-    </div>
-    <flowchart
-      :nodes="nodes"
-      :connections="connections"
-      @editnode="handleEditNode"
-      :width="'100%'"
-      :height="500"
-      :readonly="false"
-      @dblclick="handleDblClick"
-      @editconnection="handleEditConnection"
-      @save="handleChartSave"
-      ref="chart"
-      :render="render"
-    >
-    </flowchart>
-    <node-dialog
-      :visible.sync="nodeDialogVisible"
-      :node.sync="nodeForm.target"
-    ></node-dialog>
-    <connection-dialog
-      :visible.sync="connectionDialogVisible"
-      :connection.sync="connectionForm.target"
-      :operation="connectionForm.operation"
-    >
-    </connection-dialog>
-  </div>
+  <v-app class="overflow-hidden">
+    <v-sheet class="fill-height">
+      <v-main class="fill-height">
+        <v-btn
+          @click="
+            $refs.chart.add({
+              id: +new Date(),
+              x: 10,
+              y: 10,
+              name: 'New',
+              type: 'operation',
+              approvers: [],
+            })
+          "
+        >
+          Add
+        </v-btn>
+        <v-btn @click="$refs.chart.remove()">Delete</v-btn>
+        <v-btn @click="$refs.chart.editCurrent()">
+          Edit
+        </v-btn>
+        <v-btn @click="$refs.chart.save()">Save</v-btn>
+      
+        <flowchart
+          :nodes="nodes"
+          :connections="connections"
+          @editnode="handleEditNode"
+          :width="'100%'"
+          :height="500"
+          :readonly="false"
+          @dblclick="handleDblClick"
+          @editconnection="handleEditConnection"
+          @save="handleChartSave"
+          ref="chart"
+          :render="render"
+        >
+        </flowchart>
+
+        <node-dialog
+          :visible.sync="nodeDialogVisible"
+          :node.sync="nodeForm.target"
+        ></node-dialog>
+        <connection-dialog
+          :visible.sync="connectionDialogVisible"
+          :connection.sync="connectionForm.target"
+          :operation="connectionForm.operation"
+        >
+        </connection-dialog>
+      </v-main>
+    </v-sheet>
+  </v-app>
 </template>
 <script>
 /* eslint-disable no-unused-vars */
@@ -128,6 +128,7 @@ export default {
           source: { id: 5, position: "bottom" },
           destination: { id: 4, position: "bottom" },
           id: 4,
+          name: "123124",
           type: "reject",
         },
         {
@@ -251,6 +252,23 @@ export default {
         });
     },
   },
+  created :function(){
+    const mtm = window.matchMedia('(prefers-color-scheme: dark)')
+    const that = this
+    if (mtm.matches) {
+      that.$vuetify.theme.dark = true
+    } else {
+      that.$vuetify.theme.dark = false
+    }
+    mtm.addListener(function(e){
+      if (e.matches) {
+        that.$vuetify.theme.dark = true
+      } else {
+        that.$vuetify.theme.dark = false
+      }
+    })
+  
+  }
 };
 </script>
 <style scoped>
@@ -271,8 +289,4 @@ export default {
   margin-right: 4px;
 }
 
-.container {
-  width: 800px;
-  margin: auto;
-}
 </style>

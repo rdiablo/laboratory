@@ -607,7 +607,7 @@ function line2(g, x1, y1, x2, y2, startPosition, endPosition, lineWidth,
     let finish = i === points.length - 2;
     if (finish && markered) {
       let path = arrowTo(g, source[0], source[1], destination[0],
-          destination[1], lineWidth, strokeStyle, dss[0], txt);
+          destination[1], lineWidth, strokeStyle, dss[0], dss[1], txt);
       paths.push(path);
       break;
     } else {
@@ -622,17 +622,30 @@ function line2(g, x1, y1, x2, y2, startPosition, endPosition, lineWidth,
   return {lines, paths};
 }
 
-function arrowTo(g, x1, y1, x2, y2, lineWidth, strokeStyle, x0, txt) {
+function arrowTo(g, x1, y1, x2, y2, lineWidth, strokeStyle, x0, y0, txt) {
   let path = lineTo(g, x1, y1, x2, y2, lineWidth, strokeStyle);
   const id = 'arrow' + strokeStyle.replace('#', '');
   let text = txt;
-  let textxy = x0;
-  g.append('text').attr('stroke', 'white').attr('stroke-width', '3.5').attr('x', textxy).attr('y', y1+5).text(function () {
+  let textxy = x0/2 - (x2/2 - x1) - (txt.length * 9/2);
+  let conntext = g.append('text').attr('stroke', 'white').attr('stroke-width', '3.5').
+  attr('class', 'unselectable').text(function () {
     return text;
   });
-  g.append('text').attr('x', textxy).attr('y', y1+5).text(function () {
+  let conntextss = g.append('text').
+  attr('class', 'unselectable').text(function () {
     return text;
   });
+  if(y1 == y2 || y0 == y1) {
+    conntext.attr('x', textxy)
+    conntext.attr('y', y1+5)
+    conntextss.attr('x', textxy)
+    conntextss.attr('y', y1+5)
+  } else {
+    conntext.attr('x', textxy)
+    conntext.attr('y', y0+5)
+    conntextss.attr('x', textxy)
+    conntextss.attr('y', y0+5)
+  }
   g.append('marker').
       attr('id', id).
       attr('markerUnits', 'strokeWidth').
