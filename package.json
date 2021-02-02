@@ -1,8 +1,8 @@
 {
   "name": "laboratory",
   "version": "0.1.0",
-  "private": true,
-  "type": "module",
+    "private": true,
+    "type": "module",
   "scripts": {
     "dev:serve": "node server/index.mjs",
     "serve": "vue-cli-service serve",
