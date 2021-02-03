@@ -14,9 +14,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    test(context, param) {
-      return admin.test(param)
-    }
+    // test(context, param) {
+    //   return admin.test(param)
+    // }
   },
   getters: {
   }
