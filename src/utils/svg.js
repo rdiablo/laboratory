@@ -626,7 +626,9 @@ function arrowTo(g, x1, y1, x2, y2, lineWidth, strokeStyle, x0, y0, txt) {
   let path = lineTo(g, x1, y1, x2, y2, lineWidth, strokeStyle);
   const id = 'arrow' + strokeStyle.replace('#', '');
   let text = txt;
-  let textxy = x0/2 - (x2/2 - x1) - (txt.length * 9/2);
+  let tlength = 0;
+  if (txt) tlength = txt.length
+  let textxy = x0/2 - (x2/2 - x1) - (tlength * 9/2);
   let conntext = g.append('text').attr('stroke', 'white').attr('stroke-width', '3.5').
   attr('class', 'unselectable').text(function () {
     return text;
