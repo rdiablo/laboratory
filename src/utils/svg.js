@@ -5,20 +5,36 @@ function lineTo(g, x1, y1, x2, y2, lineWidth, strokeStyle, dash) {
   let sta = [x1, y1];
   let end = [x2, y2];
   let lineGenerator = d3.line().x(d => d[0]).y(d => d[1]);
-  
+  //.curve(d3.curveBundle.beta(1))
+  // let radius = 6;
+  const points = [
+    sta,
+    end
+  ];
   let path = g.append('path').
       attr('stroke', strokeStyle).
       attr('stroke-width', lineWidth).
       attr('fill', 'none').
-      attr('d', lineGenerator([sta, end]));
+      attr('d', lineGenerator(points));
   if (dash) {
     path.style('stroke-dasharray', dash.join(','));
   }
   return path;
 }
+function deleteNum(str){
+  if (str == null) {
+    return str;
+  } else {
+    let reg = /[0-9]+/g;
+    let str1 = str.replace(reg,"");
+    return str1;
+  }
+}
 
 function line2(g, x1, y1, x2, y2, startPosition, endPosition, lineWidth,
     strokeStyle, markered, txt) {
+      startPosition = deleteNum(startPosition);
+      endPosition = deleteNum(endPosition);
   let points = [];
   let start = [x1, y1];
   let end = [x2, y2];
@@ -61,31 +77,31 @@ function line2(g, x1, y1, x2, y2, startPosition, endPosition, lineWidth,
   };
   switch (startPosition) {
     case 'left':
-      second = [start[0] - 20, start[1]];
+      second = [start[0] - 30, start[1]];
       break;
     case 'top':
-      second = [start[0], start[1] - 20];
+      second = [start[0], start[1] - 30];
       break;
     case 'bottom':
-      second = [start[0], start[1] + 20];
+      second = [start[0], start[1] + 30];
       break;
     default:
-      second = [start[0] + 20, start[1]];
+      second = [start[0] + 30, start[1]];
       break;
   }
   let penult = null;
   switch (endPosition) {
     case 'right':
-      penult = [end[0] + 20, end[1]];
+      penult = [end[0] + 30, end[1]];
       break;
     case 'top':
-      penult = [end[0], end[1] - 20];
+      penult = [end[0], end[1] - 30];
       break;
     case 'bottom':
-      penult = [end[0], end[1] + 20];
+      penult = [end[0], end[1] + 30];
       break;
     default:
-      penult = [end[0] - 20, end[1]];
+      penult = [end[0] - 30, end[1]];
       break;
   }
   points.push(start);
@@ -242,7 +258,7 @@ function line2(g, x1, y1, x2, y2, startPosition, endPosition, lineWidth,
       if (startPosition === 'right') {
         switch (endPosition) {
           case 'left': {
-            addVerticalCenterLine();
+            addVerticalCenterLine(); //aaa
             break;
           }
           case 'top': {
@@ -547,7 +563,7 @@ function line2(g, x1, y1, x2, y2, startPosition, endPosition, lineWidth,
       break;
     case 'rd': {
       if (startPosition === 'right' && endPosition === 'left') {
-        addVerticalCenterLine();
+        addVerticalCenterLine(); //ok
       } else if (startPosition === 'right' && endPosition === 'bottom') {
         addSecondXPenultY();
       } else if (
@@ -644,7 +660,7 @@ function arrowTo(g, x1, y1, x2, y2, lineWidth, strokeStyle, x0, y0, txt) {
     conntextss.attr('y', y1+5)
   } else {
     conntext.attr('x', textxy)
-    conntext.attr('y', y0+5)
+    conntext.attr('y', y0+15)
     conntextss.attr('x', textxy)
     conntextss.attr('y', y0+5)
   }

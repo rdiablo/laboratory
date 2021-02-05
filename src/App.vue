@@ -26,7 +26,7 @@
           :nodes="nodes"
           :connections="connections"
           @editnode="handleEditNode"
-          :width="'100%'"
+          :width="800"
           :height="500"
           :readonly="false"
           @dblclick="handleDblClick"
@@ -78,15 +78,15 @@ export default {
           x: 340,
           y: 130,
           name: "Custom size",
-          type: "operation",
+          type: "other",
           approvers: [{ id: 1, name: "Joyce" }],
           width: 120,
           height: 60,
         },
         {
           id: 4,
-          x: 240,
-          y: 220,
+          x: 220,
+          y: 320,
           name: "Operation",
           type: "operation",
           approvers: [{ id: 2, name: "Allen" }],
@@ -107,7 +107,7 @@ export default {
           source: { id: 1, position: "right" },
           destination: { id: 4, position: "left" },
           id: 1,
-          name: "asdf",
+          name: "",
           type: "pass",
         },
         {
@@ -121,18 +121,18 @@ export default {
           source: { id: 5, position: "right" },
           destination: { id: 2, position: "left" },
           id: 3,
-          name: "",
+          name: "asfsdf",
           type: "pass",
         },
         {
-          source: { id: 5, position: "bottom" },
-          destination: { id: 4, position: "bottom" },
+          source: { id: 5, position: "bottom2" },
+          destination: { id: 4, position: "bottom2" },
           id: 4,
           name: "123124",
           type: "reject",
         },
         {
-          source: { id: 1, position: "top" },
+          source: { id: 1, position: "top2" },
           destination: { id: 3, position: "left" },
           id: 5,
           name: "",
@@ -140,7 +140,7 @@ export default {
         },
         {
           source: { id: 3, position: "right" },
-          destination: { id: 2, position: "top" },
+          destination: { id: 2, position: "top2" },
           id: 6,
           name: "",
           type: "pass",
@@ -166,7 +166,7 @@ export default {
     },
     async handleChartSave(nodes, connections) {
       console.log(connections);
-      // console.log(nodes)
+      console.log(nodes)
       // axios.post(url, {nodes, connection}).then(resp => {
       //   this.nodes = resp.nodes;
       //   this.connections = resp.connections;
@@ -182,8 +182,11 @@ export default {
       this.connectionDialogVisible = true;
     },
     render: function (g, node, isSelected) {
-      node.width = node.width || 60;
-      node.height = node.height || 60;
+      node.width = node.width || 120;
+      node.height = node.height || 40;
+      // if (node.type == "operation" && node.approvers[0].name) {
+      //   node.width = node.approvers[0].name.length * 8 + 8
+      // }
       let borderColor = isSelected ? "#666666" : "#bbbbbb";
       // body
       if (node.id === 3 || node.id === 7) {
@@ -201,17 +204,17 @@ export default {
         let body = g.append("rect").attr("class", "body");
         body
           .style("width", node.width + "px")
-          .style("fill", "white")
-          .style("stroke-width", "1px");
+          .style("fill", "#FFDA5A")
+          .style("stroke-width", 0);
         if (node.type !== "start" && node.type !== "end" && node.type !== "all") {
-          body.attr("x", node.x).attr("y", node.y);
+          body.attr("x", node.x).attr("y", node.y).attr("rx", 6);
           body.style("height", roundTo20(node.height) + "px");
         } else {
           body
             .attr("x", node.x)
             .attr("y", node.y)
             .classed(node.type, true)
-            .attr("rx", 30);
+            .attr("rx", 20);
           body.style("height", roundTo20(node.height) + "px");
         }
         body.attr("stroke", borderColor);
@@ -235,21 +238,28 @@ export default {
       g.append("text")
         .attr("x", node.x + node.width / 2)
         .attr("y", bodyTextY)
+        .style("fill", "#715809")
+        .style("font-weight", "bolder")
         .attr("class", "unselectable")
         .attr("text-anchor", "middle")
         .text(function () {
           return text;
         })
         .each(function wrap() {
-          let self = d3.select(this),
-            textLength = self.node().getComputedTextLength(),
-            text = self.text();
-          while (textLength > node.width - 2 * 4 && text.length > 0) {
-            text = text.slice(0, -1);
-            self.text(text + "...");
-            textLength = self.node().getComputedTextLength();
-          }
+          // let self = d3.select(this),
+          //   textLength = self.node().getComputedTextLength(),
+          //   text = self.text();
+          // while (textLength > node.width - 2 * 4 && text.length > 0) {
+          //   text = text.slice(0, -1);
+          //   self.text(text + "...");
+          //   textLength = self.node().getComputedTextLength();
+          // }
+          if (node.type == "operation" && d3.select(this).node().getComputedTextLength() > 120) node.width = d3.select(this).node().getComputedTextLength() + 10
         });
+        
+      //   node.width = node.approvers[0].name.length * 8 + 8
+      // }
+        // if(node.type == "operation" && node.approvers[0].name) console.log(gtext._groups[0][0])
     },
   },
   created :function(){

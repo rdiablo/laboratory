@@ -2,8 +2,9 @@ import * as d3 from 'd3';
 import {roundTo20} from '../../utils/math';
 
 function render(g, node, isSelected) {
-  node.width = node.width || 60;
-  node.height = node.height || 60;
+  
+  node.width = node.width || 120;
+  node.height = node.height || 40;
   let borderColor = isSelected ? '#666666' : '#bbbbbb';
   if (node.type !== 'start' && node.type !== 'end') {
     // title

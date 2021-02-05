@@ -182,7 +182,7 @@ export default {
         let destinationPosition = this.hoveredConnector
           ? this.hoveredConnector.position
           : null;
-        this.arrowTo(
+        this.arrowTos(
           sourceOffset.x,
           sourceOffset.y,
           this.cursorToChartOffset.x,
@@ -207,13 +207,29 @@ export default {
       this.selectionInfo = { x: event.offsetX, y: event.offsetY };
     },
     getConnectorPosition(node) {
-      const halfWidth = node.width / 2;
-      const halfHeight = node.height / 2;
-      let top = { x: node.x + halfWidth, y: node.y };
-      let left = { x: node.x, y: node.y + halfHeight };
-      let bottom = { x: node.x + halfWidth, y: node.y + node.height };
-      let right = { x: node.x + node.width, y: node.y + halfHeight };
-      return { left, right, top, bottom };
+      if (node.type === "operation") {
+        const Width21 = node.width / 2;
+        const Height21 = node.height / 2;
+        const Width13 = node.width / 4;
+        const Width23 = node.width / 1.33;
+        let top1 = { x: node.x + Width13, y: node.y };
+        let top2 = { x: node.x + Width21, y: node.y };
+        let top3 = { x: node.x + Width23, y: node.y };
+        let left = { x: node.x, y: node.y + Height21 };
+        let bottom1 = { x: node.x + Width13, y: node.y + node.height };
+        let bottom2 = { x: node.x + Width21, y: node.y + node.height };
+        let bottom3 = { x: node.x + Width23, y: node.y + node.height };
+        let right = { x: node.x + node.width, y: node.y + Height21 };
+        return { left, right, top1, top2, top3, bottom1, bottom2, bottom3 };
+      } else {
+        const halfWidth = node.width / 2;
+        const halfHeight = node.height / 2;
+        let top2 = { x: node.x + halfWidth, y: node.y };
+        let left = { x: node.x, y: node.y + halfHeight };
+        let bottom2 = { x: node.x + halfWidth, y: node.y + node.height };
+        let right = { x: node.x + node.width, y: node.y + halfHeight };
+        return { left, right, top2, bottom2 };
+      }
     },
     renderSelection() {
       let that = this;
@@ -282,18 +298,18 @@ export default {
               conn.destination.position
             );
             let colors = {
-              pass: "#52c41a",
+              pass: "#999999",
               reject: "red",
             };
             if (
               that.currentConnections.filter((item) => item === conn).length > 0
             ) {
               colors = {
-                pass: "#12640a",
+                pass: "#999999",
                 reject: "darkred",
               };
             }
-            let result = that.arrowTo(
+            let result = that.arrowTos(
               sourcePosition.x,
               sourcePosition.y,
               destinationPosition.x,
@@ -361,12 +377,13 @@ export default {
       let svg = d3.select("#svg");
       return svg.insert(element, ".selection");
     },
-    guideLineTo(x1, y1, x2, y2) {
+    guideLineTo(x1, y1, x2, y2, width,height) {
       let g = this.append("g");
       g.classed("guideline", true);
-      lineTo(g, x1, y1, x2, y2, 1, "#a3a3a3", [5, 3]);
+      // lineTo(g, x1, y1, x2, y2, 1, "#a3a3a3", [5, 3]);
+      lineTo(g, x1+width/2, y1+height/2, x2+width/2, y2+height/2, 1, "#a3a3a3", [5, 3]);
     },
-    arrowTo(x1, y1, x2, y2, startPosition, endPosition, color, txt) {
+    arrowTos(x1, y1, x2, y2, startPosition, endPosition, color, txt) {
       let g = this.append("g");
       g.classed("connection", true);
       line2(
@@ -377,7 +394,7 @@ export default {
         y2,
         startPosition,
         endPosition,
-        1.5,
+        1.25,
         color || "#a3a3a3",
         true,
         txt
@@ -445,7 +462,6 @@ export default {
             }
             currentNode.y += y;
           }
-
           d3.selectAll("#svg > g.guideline").remove();
           let edge = that.getCurrentNodesEdge();
           let expectX = Math.round(Math.round(edge.start.x) / 10) * 10;
@@ -462,14 +478,18 @@ export default {
                     item.x,
                     item.y + item.height,
                     expectX,
-                    expectY
+                    expectY,
+                    item.width,
+                    item.height
                   );
                 } else {
                   that.guideLineTo(
                     expectX,
                     expectY + item.height,
                     item.x,
-                    item.y
+                    item.y,
+                    item.width,
+                    item.height
                   );
                 }
               }
@@ -480,14 +500,18 @@ export default {
                     item.x + item.width,
                     item.y,
                     expectX,
-                    expectY
+                    expectY,
+                    item.width,
+                    item.height
                   );
                 } else {
                   that.guideLineTo(
                     expectX + item.width,
                     expectY,
                     item.x,
-                    item.y
+                    item.y,
+                    item.width,
+                    item.height
                   );
                 }
               }
@@ -497,8 +521,8 @@ export default {
         .on("end", function () {
           d3.selectAll("#svg > g.guideline").remove();
           for (let currentNode of that.currentNodes) {
-            currentNode.x = Math.round(Math.round(currentNode.x) / 20) * 20;
-            currentNode.y = Math.round(Math.round(currentNode.y) / 20) * 20;
+            currentNode.x = Math.round(Math.round(currentNode.x) / 10) * 10;
+            currentNode.y = Math.round(Math.round(currentNode.y) / 10) * 10;
           }
         });
       g.call(drag);
@@ -524,7 +548,7 @@ export default {
           .append("circle")
           .attr("cx", positionElement.x)
           .attr("cy", positionElement.y)
-          .attr("r", 4)
+          .attr("r", 3)
           .attr("class", "connector");
         connector
           .on("mousedown", function () {
@@ -646,8 +670,8 @@ export default {
       that.internalConnections.splice(0, that.internalConnections.length);
       that.nodes.forEach((node) => {
         let newNode = Object.assign({}, node);
-        newNode.width = newNode.width || 60;
-        newNode.height = newNode.height || 60;
+        newNode.width = newNode.width || 40;
+        newNode.height = newNode.height || 40;
         that.internalNodes.push(newNode);
       });
       that.connections.forEach((connection) => {
