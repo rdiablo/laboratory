@@ -1,17 +1,17 @@
 <template>
-  <div class="board">
-    <div class="row">
-      <div class="col-md">
-        <task-lane id="todo" title="To-Do" :items="todoItems"></task-lane>
-      </div>
-      <div class="col-md">
-        <task-lane id="inProgress" title="In Progress" :items="inProgressItems"></task-lane>
-      </div>
-      <div class="col-md">
-        <task-lane id="done" title="Done" :items="doneItems"></task-lane>
-      </div>
-    </div>
-  </div>
+  <v-container class="board">
+    <v-row>
+      <v-col cols="12" sm="4">
+        <task-lane id="todo" title="To-Do" height="100%" :items="todoItems"></task-lane>
+      </v-col>
+      <v-col cols="12" sm="4">
+        <task-lane id="inProgress" title="In Progress" height="100%" :items="inProgressItems"></task-lane>
+      </v-col>
+      <v-col cols="12" sm="4">
+        <task-lane id="done" title="Done" height="100%" :items="doneItems"></task-lane>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -30,3 +30,5 @@ export default {
   }),
 };
 </script>
+<style scoped>
+</style>

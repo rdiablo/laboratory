@@ -1,302 +1,168 @@
 <template>
   <v-app class="overflow-hidden">
-    <v-sheet class="fill-height">
-      <v-main class="fill-height">
-        <v-btn
-          @click="
-            $refs.chart.add({
-              id: +new Date(),
-              x: 10,
-              y: 10,
-              name: 'New',
-              type: 'operation',
-              approvers: [],
-            })
-          "
-        >
-          Add
-        </v-btn>
-        <v-btn @click="$refs.chart.remove()">Delete</v-btn>
-        <v-btn @click="$refs.chart.editCurrent()">
-          Edit
-        </v-btn>
-        <v-btn @click="$refs.chart.save()">Save</v-btn>
-      
-        <flowchart
-          :nodes="nodes"
-          :connections="connections"
-          @editnode="handleEditNode"
-          :width="800"
-          :height="500"
-          :readonly="false"
-          @dblclick="handleDblClick"
-          @editconnection="handleEditConnection"
-          @save="handleChartSave"
-          ref="chart"
-          :render="render"
-        >
-        </flowchart>
+    <v-navigation-drawer permanent expand-on-hover app>
+      <v-list-item class="px-2">
+        <v-list-item-avatar>
+          <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
+        </v-list-item-avatar>
+      </v-list-item>
 
-        <node-dialog
-          :visible.sync="nodeDialogVisible"
-          :node.sync="nodeForm.target"
-        ></node-dialog>
-        <connection-dialog
-          :visible.sync="connectionDialogVisible"
-          :connection.sync="connectionForm.target"
-          :operation="connectionForm.operation"
+      <v-list-item link>
+        <v-list-item-content>
+          <v-list-item-title class="title">
+            Peter.Dai
+          </v-list-item-title>
+          <v-list-item-subtitle>实验室业务管理员</v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+      <v-divider></v-divider>
+      <v-list>
+        <v-list-item v-for="(item, i) in items" :key="i" :to="item.to" @click.stop="title === item.title" router exact>
+          <v-list-item-icon>
+            <v-icon v-text="item.icon"></v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title"/>
+          </v-list-item-content>
+        </v-list-item>
+        <v-divider></v-divider>
+<!--         
+        <v-list-group
+          no-action
+          sub-group
         >
-        </connection-dialog>
-      </v-main>
-    </v-sheet>
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>admin</v-list-item-title>
+            </v-list-item-content>
+          </template>
+
+          <v-list-item
+            v-for="(admin, i) in admins"
+            :key="i"
+            link
+          >
+            <v-list-item-title v-text="admin[0]"></v-list-item-title>
+            <v-list-item-icon>
+              <v-icon v-text="admin[1]"></v-icon>
+            </v-list-item-icon>
+          </v-list-item>
+        </v-list-group>
+        <v-divider></v-divider>
+        <v-list-group
+          sub-group
+          no-action
+        >
+          <template v-slot:activator>
+            <v-list-item-content>
+              <v-list-item-title>统计</v-list-item-title>
+            </v-list-item-content>
+          </template>
+          <v-list-item
+            v-for="(crud, i) in cruds"
+            :key="i"
+            @click=""
+          >
+            <v-list-item-title v-text="crud[0]"></v-list-item-title>
+            <v-list-item-action>
+              <v-icon v-text="crud[1]"></v-icon>
+            </v-list-item-action>
+          </v-list-item>
+        </v-list-group> -->
+        
+      </v-list>
+    </v-navigation-drawer>
+    <v-app-bar :clipped-left="clipped" app dense>
+      <v-app-bar-title class="text-uppercase" v-text="title"></v-app-bar-title>
+      <v-spacer></v-spacer>
+      <v-divider vertical inset></v-divider>
+      <v-btn small icon>
+        <v-icon small>mdi-cog-outline</v-icon>
+      </v-btn>
+      <v-btn small icon>
+        <v-icon small>mdi-magnify</v-icon>
+      </v-btn>
+    </v-app-bar>
+    <v-main>
+      <v-container fluid>
+        <router-view></router-view>
+      </v-container>
+    </v-main>
   </v-app>
 </template>
+
 <script>
-/* eslint-disable no-unused-vars */
-
-import ConnectionDialog from "./components/ConnectionDialog";
-import NodeDialog from "./components/NodeDialog";
-import Flowchart from "./components/flowchart/Flowchart";
-import * as d3 from "d3";
-import { roundTo20 } from "./utils/math";
-
 export default {
-  components: {
-    ConnectionDialog,
-    NodeDialog,
-    Flowchart,
-  },
-  data: function () {
-    return {
-      nodes: [
-        { id: 0, x: 50, y: 50, name: "", type: "end" },
-        { id: 7, x: 630, y: 50, name: "", type: "all" },
-        { id: 1, x: 60, y: 220, name: "Start", type: "start" },
-        { id: 2, x: 630, y: 220, name: "End", type: "end" },
-        {
-          id: 3,
-          x: 340,
-          y: 130,
-          name: "Custom size",
-          type: "other",
-          approvers: [{ id: 1, name: "Joyce" }],
-          width: 120,
-          height: 60,
-        },
-        {
-          id: 4,
-          x: 220,
-          y: 320,
-          name: "Operation",
-          type: "operation",
-          approvers: [{ id: 2, name: "Allen" }],
-          width: 120,
-        },
-        {
-          id: 5,
-          x: 440,
-          y: 220,
-          name: "Operation",
-          type: "operation",
-          approvers: [{ id: 3, name: "Teresa" }],
-          width: 120,
-        },
-      ],
-      connections: [
-        {
-          source: { id: 1, position: "right" },
-          destination: { id: 4, position: "left" },
-          id: 1,
-          name: "",
-          type: "pass",
-        },
-        {
-          source: { id: 4, position: "right" },
-          destination: { id: 5, position: "left" },
-          id: 2,
-          name: "",
-          type: "pass",
-        },
-        {
-          source: { id: 5, position: "right" },
-          destination: { id: 2, position: "left" },
-          id: 3,
-          name: "asfsdf",
-          type: "pass",
-        },
-        {
-          source: { id: 5, position: "bottom2" },
-          destination: { id: 4, position: "bottom2" },
-          id: 4,
-          name: "123124",
-          type: "reject",
-        },
-        {
-          source: { id: 1, position: "top2" },
-          destination: { id: 3, position: "left" },
-          id: 5,
-          name: "",
-          type: "pass",
-        },
-        {
-          source: { id: 3, position: "right" },
-          destination: { id: 2, position: "top2" },
-          id: 6,
-          name: "",
-          type: "pass",
-        },
-      ],
-      nodeForm: { target: null },
-      connectionForm: { target: null, operation: null },
-      nodeDialogVisible: false,
-      connectionDialogVisible: false,
-    };
-  },
-  async mounted() {},
+  data: () => ({
+    fixed: false,
+    clipped: false,
+    items: [
+      {
+        icon: "mdi-home-outline",
+        title: "主页",
+        to: "/home"
+      },
+      {
+        icon: "mdi-transfer",
+        title: "工作流",
+        to: "/flow"
+      },
+      {
+        icon: "mdi-view-week-outline",
+        title: "看板",
+        to: "/kanban"
+      },
+      {
+        icon: "mdi-card-bulleted-settings-outline",
+        title: "任务",
+        to: "/task"
+      }
+    ],
+    miniVariant: false,
+    Drawer: false,
+    title: "Virchow",
+    // admins: [
+    //   ['Management'],
+    //   ['Settings'],
+    // ],
+    // cruds: [
+    //   ['工作量统计表'],
+    //   ['财务统计表'],
+    // ],
+  }),
   methods: {
-    handleDblClick(position) {
-      this.$refs.chart.add({
-        id: +new Date(),
-        x: position.x,
-        y: position.y,
-        name: "New",
-        type: "operation",
-        approvers: [],
-      });
-    },
-    async handleChartSave(nodes, connections) {
-      console.log(connections);
-      console.log(nodes)
-      // axios.post(url, {nodes, connection}).then(resp => {
-      //   this.nodes = resp.nodes;
-      //   this.connections = resp.connections;
-      //   // Flowchart will refresh after this.nodes and this.connections changed
-      // });
-    },
-    handleEditNode(node) {
-      this.nodeForm.target = node;
-      this.nodeDialogVisible = true;
-    },
-    handleEditConnection(connection) {
-      this.connectionForm.target = connection;
-      this.connectionDialogVisible = true;
-    },
-    render: function (g, node, isSelected) {
-      node.width = node.width || 120;
-      node.height = node.height || 40;
-      // if (node.type == "operation" && node.approvers[0].name) {
-      //   node.width = node.approvers[0].name.length * 8 + 8
-      // }
-      let borderColor = isSelected ? "#666666" : "#bbbbbb";
-      // body
-      if (node.id === 3 || node.id === 7) {
-        let y1 = node.y + node.height / 2
-        let x1 = node.x + node.width / 2
-        let y2 = node.y + node.height
-        let x2 = node.x + node.width
-        let ss = node.x +","+ y1 + " " + x1 + "," + node.y + " " + x2 + "," + y1 + " " + x1 + "," + y2;
-        let body = g.append("polygon").attr("points", ss);
-        body.style("fill", "white");
-        body.style("stroke-width", "1px");
-        body.classed(node.type, true);
-        body.attr("stroke", borderColor);
-      } else {
-        let body = g.append("rect").attr("class", "body");
-        body
-          .style("width", node.width + "px")
-          .style("fill", "#FFDA5A")
-          .style("stroke-width", 0);
-        if (node.type !== "start" && node.type !== "end" && node.type !== "all") {
-          body.attr("x", node.x).attr("y", node.y).attr("rx", 6);
-          body.style("height", roundTo20(node.height) + "px");
-        } else {
-          body
-            .attr("x", node.x)
-            .attr("y", node.y)
-            .classed(node.type, true)
-            .attr("rx", 20);
-          body.style("height", roundTo20(node.height) + "px");
-        }
-        body.attr("stroke", borderColor);
-      }
-
-      // body text
-      let text =
-        node.type === "start"
-          ? "Start"
-          : node.type === "all"
-          ? "All"
-          : node.type === "end"
-          ? "End"
-          : !node.approvers || node.approvers.length === 0
-          ? "No approver"
-          : node.approvers.length > 1
-          ? `${node.approvers[0].name + "..."}`
-          : node.approvers[0].name;
-      let bodyTextY;
-      bodyTextY = node.y + 5 + roundTo20(node.height) / 2;
-      g.append("text")
-        .attr("x", node.x + node.width / 2)
-        .attr("y", bodyTextY)
-        .style("fill", "#715809")
-        .style("font-weight", "bolder")
-        .attr("class", "unselectable")
-        .attr("text-anchor", "middle")
-        .text(function () {
-          return text;
-        })
-        .each(function wrap() {
-          // let self = d3.select(this),
-          //   textLength = self.node().getComputedTextLength(),
-          //   text = self.text();
-          // while (textLength > node.width - 2 * 4 && text.length > 0) {
-          //   text = text.slice(0, -1);
-          //   self.text(text + "...");
-          //   textLength = self.node().getComputedTextLength();
-          // }
-          if (node.type == "operation" && d3.select(this).node().getComputedTextLength() > 120) node.width = d3.select(this).node().getComputedTextLength() + 10
-        });
-        
-      //   node.width = node.approvers[0].name.length * 8 + 8
-      // }
-        // if(node.type == "operation" && node.approvers[0].name) console.log(gtext._groups[0][0])
-    },
+   
   },
-  created :function(){
-    const mtm = window.matchMedia('(prefers-color-scheme: dark)')
-    const that = this
-    if (mtm.matches) {
-      that.$vuetify.theme.dark = true
-    } else {
-      that.$vuetify.theme.dark = false
-    }
-    mtm.addListener(function(e){
-      if (e.matches) {
-        that.$vuetify.theme.dark = true
-      } else {
-        that.$vuetify.theme.dark = false
-      }
-    })
+  // created :function(){
+  //   const mtm = window.matchMedia('(prefers-color-scheme: dark)')
+  //   const that = this
+  //   if (mtm.matches) {
+  //     that.$vuetify.theme.dark = true
+  //   } else {
+  //     that.$vuetify.theme.dark = false
+  //   }
+  //   mtm.addListener(function(e){
+  //     if (e.matches) {
+  //       that.$vuetify.theme.dark = true
+  //     } else {
+  //       that.$vuetify.theme.dark = false
+  //     }
+  //   })
   
-  }
-};
+  // }
+}
 </script>
-<style scoped>
-#toolbar {
-  margin-bottom: 10px;
-}
 
-.title {
-  margin-top: 10px;
-  margin-bottom: 0;
+<style>
+  .overflow-hidden {
+    overflow:auto !important;
+  }
+  body,html {
+    overflow:hidden !important;
+  }
+@media screen and (min-width: 1264px) {
+  .container {
+    max-width: none !important;
+  }
 }
-
-.subtitle {
-  margin-bottom: 10px;
-}
-
-#toolbar > button {
-  margin-right: 4px;
-}
-
 </style>

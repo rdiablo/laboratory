@@ -644,7 +644,7 @@ function arrowTo(g, x1, y1, x2, y2, lineWidth, strokeStyle, x0, y0, txt) {
   let text = txt;
   let tlength = 0;
   if (txt) tlength = txt.length
-  let textxy = x0/2 - (x2/2 - x1) - (tlength * 9/2);
+  let textxy = x0/2 - (x2/2 - x1) - (tlength * 6/2);
   let conntext = g.append('text').attr('stroke', 'white').attr('stroke-width', '3.5').
   attr('class', 'unselectable').text(function () {
     return text;
@@ -655,14 +655,14 @@ function arrowTo(g, x1, y1, x2, y2, lineWidth, strokeStyle, x0, y0, txt) {
   });
   if(y1 == y2 || y0 == y1) {
     conntext.attr('x', textxy)
-    conntext.attr('y', y1+5)
+    conntext.attr('y', y1+4)
     conntextss.attr('x', textxy)
-    conntextss.attr('y', y1+5)
+    conntextss.attr('y', y1+4)
   } else {
     conntext.attr('x', textxy)
-    conntext.attr('y', y0+15)
+    conntext.attr('y', y0+4)
     conntextss.attr('x', textxy)
-    conntextss.attr('y', y0+5)
+    conntextss.attr('y', y0+4)
   }
   g.append('marker').
       attr('id', id).

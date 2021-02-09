@@ -1,17 +1,17 @@
 <template>
-  <div class="card">
-    <h3 class="card-header">{{title}}</h3>
-    <div class="card-body">
-      <draggable v-model="draggables" :options="{ group: 'default' }">
-        <div v-for="item in items" :key="item.id">
+  <v-card class="card" style="height:100%">
+    <v-card-title>{{title}}</v-card-title>
+    <v-card-text style="height:100%">
+      <draggable v-model="draggables" group="default" style="background-color:transparent;height:100%">
+        <v-container v-for="item in items" :key="item.id">
           <item :item="item"></item>
-        </div>
+        </v-container>
       </draggable>
-    </div>
-    <div class="card-footer text-muted">
+    </v-card-text>
+    <v-card-text>
       {{itemCount}}
-    </div>
-  </div>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>
@@ -46,9 +46,4 @@ export default {
 };
 </script>
 
-<style>
-.card-body > * {
-  min-height: 6vh;
-}
-</style>
 

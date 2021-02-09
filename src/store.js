@@ -24,6 +24,9 @@ export default new Vuex.Store({
     updateItems(state, { items, id }) {
       state.items[id] = items;
     },
+    getItems: state => {
+      return state.items
+    },
   },
   actions: {
     // test(context, param) {
@@ -31,5 +34,12 @@ export default new Vuex.Store({
     // }
   },
   getters: {
+    getItems: (state) => (id) => {
+      return state.items.find(item => item.id === id)
+      // state.items.map((value) => {
+      //   return value
+      // })
+      // return state.items
+    },
   }
 })
