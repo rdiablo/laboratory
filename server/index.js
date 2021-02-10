@@ -1,3 +1,4 @@
+import 'dotenv/config.js';
 import Koa from 'koa';
 import { ApolloServer } from 'apollo-server-koa';
 import jwt from 'koa-jwt';
@@ -5,7 +6,6 @@ import 'babel-polyfill';
 import schema from './schema/index.js';
 import models from './models.js';
 const app = new Koa();
-
 
 
 

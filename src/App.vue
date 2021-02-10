@@ -1,6 +1,9 @@
 <template>
-  <v-app class="overflow-hidden">
-    <v-navigation-drawer permanent expand-on-hover app>
+  <v-app class="overflow-hidden" v-bind:class="[online ? activeClass : '', errorClass]">
+    <video class="sleep-video" playsinline autoplay muted loop>
+      <source :src="require('./assets/video.mp4')" type="video/mp4">
+    </video>
+    <v-navigation-drawer v-if="online" permanent expand-on-hover app>
       <v-list-item class="px-2">
         <v-list-item-avatar>
           <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
@@ -72,7 +75,7 @@
         
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar :clipped-left="clipped" app dense>
+    <v-app-bar v-if="online" :clipped-left="clipped" app dense>
       <v-app-bar-title class="text-uppercase" v-text="title"></v-app-bar-title>
       <v-spacer></v-spacer>
       <v-divider vertical inset></v-divider>
@@ -83,8 +86,8 @@
         <v-icon small>mdi-magnify</v-icon>
       </v-btn>
     </v-app-bar>
-    <v-main>
-      <v-container fluid>
+    <v-main class="d-flex align-stretch">
+      <v-container fluid style="height:100%">
         <router-view></router-view>
       </v-container>
     </v-main>
@@ -94,6 +97,8 @@
 <script>
 export default {
   data: () => ({
+    activeClass: 'online',
+    errorClass: 'offline',
     fixed: false,
     clipped: false,
     items: [
@@ -130,30 +135,57 @@ export default {
     //   ['财务统计表'],
     // ],
   }),
+  computed: {
+    online: {
+      get () {
+        return this.$store.state.online
+      }
+    }
+  },
   methods: {
    
   },
-  // created :function(){
-  //   const mtm = window.matchMedia('(prefers-color-scheme: dark)')
-  //   const that = this
-  //   if (mtm.matches) {
-  //     that.$vuetify.theme.dark = true
-  //   } else {
-  //     that.$vuetify.theme.dark = false
-  //   }
-  //   mtm.addListener(function(e){
-  //     if (e.matches) {
-  //       that.$vuetify.theme.dark = true
-  //     } else {
-  //       that.$vuetify.theme.dark = false
-  //     }
-  //   })
+  created :function(){
+    // const mtm = window.matchMedia('(prefers-color-scheme: dark)')
+    // const that = this
+    // if (mtm.matches) {
+    //   that.$vuetify.theme.dark = true
+    // } else {
+    //   that.$vuetify.theme.dark = false
+    // }
+    // mtm.addListener(function(e){
+    //   if (e.matches) {
+    //     that.$vuetify.theme.dark = true
+    //   } else {
+    //     that.$vuetify.theme.dark = false
+    //   }
+    // })
   
-  // }
+  }
 }
 </script>
 
 <style>
+  .sleep-video {
+    -webkit-filter: blur(20px) saturate(800%);
+    filter: blur(20px) saturate(800%);
+    opacity: .5;
+    left: 0;
+    top: 0;
+    height: 125%;
+    width: 125%;
+    position: fixed;
+    top:-25%;
+    vertical-align: middle;
+    z-index: 0;
+    object-fit: cover;
+  }
+  .online {
+    background-color: #ffffff;
+  }
+  .offline {
+    background-color: rgb(25, 22, 53) !important;
+  }
   .overflow-hidden {
     overflow:auto !important;
   }
@@ -163,6 +195,7 @@ export default {
 @media screen and (min-width: 1264px) {
   .container {
     max-width: none !important;
+    height: 100%;
   }
 }
 </style>

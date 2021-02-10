@@ -45,7 +45,7 @@ export const resolvers = {
         throw new Error('No user with that id');
       }
 
-      const valid = await bcrypt.compare(password, user.password);
+      const valid = bcrypt.compare(password, user.password);
 
       if (!valid) {
         throw new Error('Incorrect password');

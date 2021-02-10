@@ -11,6 +11,7 @@ module.exports = {
     },
     extract: false,
   },
+  publicPath: process.env.PUBLIC_PATH || '/',
   "transpileDependencies": [
     "vuetify"
   ]
