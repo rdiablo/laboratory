@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import fetch from './utils/request'
 import axios from 'axios'
+// import gql from 'graphql-tag'
 
 Vue.use(Vuex)
 
@@ -12,6 +13,7 @@ export default new Vuex.Store({
     productPaginationAll: [],
     categoryAll: [],
     imageAll: [],
+    uid: '',
     identifier: '',
     password: '',
     online: false,
@@ -47,6 +49,9 @@ export default new Vuex.Store({
          name: image.name,
       })
     },
+    retrieveId(state, username) {        //取回用户ID
+      state.uid = username
+    },
     updateIdentifier (state, identifier) {
       state.identifier = identifier
     },
@@ -81,6 +86,7 @@ export default new Vuex.Store({
     // test(context, param) {
     //   return admin.test(param)
     // }
+    
     retrieveName(context) {
       axios.defaults.headers.common['Authorization'] = 'Bearer ' + context.state.token
 
@@ -129,25 +135,28 @@ export default new Vuex.Store({
         })
       }
     },
+    // retrieveToken(context, credentials) {
+    //   return new Promise((resolve, reject) => {
+    //     axios.post('/login', {
+    //       email: credentials.email,
+    //       password: credentials.password,
+    //     })
+    //       .then(response => {
+    //         const token = response.data.data.token
+    //         localStorage.setItem('access_token', token)
+    //         context.commit('retrieveToken', token)
+    //         resolve(response)
+    //         // console.log(response);
+    //         // context.commit('addTodo', response.data)
+    //       })
+    //       .catch(error => {
+    //         //console.log(error)
+    //         reject(error)
+    //       })
+    //     })
+    // },
     retrieveToken(context, credentials) {
-      return new Promise((resolve, reject) => {
-        axios.post('/login', {
-          email: credentials.email,
-          password: credentials.password,
-        })
-          .then(response => {
-            const token = response.data.data.token
-            localStorage.setItem('access_token', token)
-            context.commit('retrieveToken', token)
-            resolve(response)
-            // console.log(response);
-            // context.commit('addTodo', response.data)
-          })
-          .catch(error => {
-            //console.log(error)
-            reject(error)
-          })
-        })
+      localStorage.setItem('JWT_TOKEN', credentials)
     },
     ProductData(context, credentials ){
       return new Promise((resolve, reject) => {

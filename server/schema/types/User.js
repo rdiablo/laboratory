@@ -8,8 +8,10 @@ export const typeDef = gql`
     password: String!
     username: String
   }
+  
   extend type Query {
     getUser(id: ID!): User
+    getUserID(username: String!): ID
   }
   extend type Mutation {
     login(id: ID!, password: String!): String
@@ -21,6 +23,9 @@ export const resolvers = {
   Query: {
     getUser: async (root, { id }, { models }) => {
       return models.User.findById({ id });
+    },
+    getUserID: async (root, { username }, { models }) => {
+      return models.User.findOne({ username });
     },
   },
   Mutation: {
@@ -39,13 +44,14 @@ export const resolvers = {
       );
     },
     login: async (root, { id, password }, { models }) => {
+      
       const user = await models.User.findById({ id });
 
       if (!user) {
         throw new Error('No user with that id');
       }
 
-      const valid = bcrypt.compare(password, user.password);
+      const valid = await bcrypt.compare(password, user.password);
 
       if (!valid) {
         throw new Error('Incorrect password');

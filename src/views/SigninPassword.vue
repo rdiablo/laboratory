@@ -63,17 +63,45 @@
 
 <script>
 import { wip } from '@/helpers.js'
+import gql from 'graphql-tag'
 export default {
   data: () => ({
     show: false,
     password: '',
+    token: ''
   }),
   computed: {
   },
   methods: {
     wip,
+    async getToken(ids,passwords) {
+      // 调用 graphql 变更
+      await this.$apollo.mutate({
+        // 查询语句
+        mutation: gql`mutation ($id: ID!, $password: String!) {
+          login(id: $id, password: $password)
+        }`,
+        // 参数
+        variables: {
+          id: ids,
+          password: passwords
+        },
+      }).then((data) => {
+        // Result
+        // console.log(data.data.login)
+        this.$store.dispatch('retrieveToken', data.data.login)
+        // this.$emit('next', {type:'pass', pass: this.password})
+      }).catch((errors) => {
+        // Error
+        console.error(errors)
+      })
+    },
     passwords() {
-      this.$emit('next', {type:'pass', pass: this.password})
+      // console.log(this.$store.state.uid)
+      // console.log(this.password)
+      this.getToken(this.$store.state.uid, this.password)
+      // console.log(comlog)
+      // this.$emit('next', {type:'pass', pass: this.password})
     }
   }
 }

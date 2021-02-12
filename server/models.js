@@ -7,12 +7,12 @@ if(db) {
 	console.log('mongodb connected successfully');
 	global.db = db;
 }
-const MySchema = mongoose.Schema({
-	_id: String,
-	email: String,
-	lastIP: String,
-});
-const MyModel = db.model('Hello', MySchema);
+// const MySchema = mongoose.Schema({
+// 	_id: String,
+// 	email: String,
+// 	lastIP: String,
+// });
+// const MyModel = db.model('Hello', MySchema);
 
 // MyModel.find({}, function (err, docs) {
 // 	if(err) {
@@ -25,25 +25,25 @@ const MyModel = db.model('Hello', MySchema);
 // });
 // const MyModel = connection.model('Hello', models);
 // MyModel.find({ size: 'small' })
-const HelloFields = {
-  email: {
-    type: GraphQLString
-  },
-  lastIP: {
-    type: GraphQLString
-  }
-}
-const HelloType = new GraphQLObjectType({
-  name: 'Hello',
-  fields: HelloFields
-});
-const myhello = {
-	type: new GraphQLList(HelloType),
-	async resolve (root, params, options) {
-		// console.log(123)
-		return MyModel.find();
-	}
-}
+// const HelloFields = {
+//   email: {
+//     type: GraphQLString
+//   },
+//   lastIP: {
+//     type: GraphQLString
+//   }
+// }
+// const HelloType = new GraphQLObjectType({
+//   name: 'Hello',
+//   fields: HelloFields
+// });
+// const myhello = {
+// 	type: new GraphQLList(HelloType),
+// 	async resolve (root, params, options) {
+// 		// console.log(123)
+// 		return MyModel.find();
+// 	}
+// }
 const models = {
 	Hellos: {
 		async findAll() {
@@ -60,6 +60,11 @@ const models = {
     async findById({ id }) {
       const users = await knex.select().from('User').where({ id });
       if (users && users.length !== 0) return users[0];
+      return null;
+    },
+    async findOne({ username }) {
+      const id = await knex.select().from('User').where({ username });
+      if (id) return id[0].id;
       return null;
     },
     async create(data) {

@@ -23,7 +23,6 @@ export default {
   }),
   methods: {
     onNext (conn) {
-      console.log(conn)
       if(conn.type == 'email'){
         this.loading = true
         this.disabled = true

@@ -9,13 +9,14 @@
           style="vertical-align: middle;-webkit-filter: drop-shadow(1px 1px 1px #ccc);filter: drop-shadow(1px 1px 1px #ccc);"
           class="mr-6"
         > -->
-        <!-- <img
+        <img
           :src="require('../assets/logotext.svg')"
           alt="Virchows Logo"
-          width="240"
+          width="300"
+          class="mb-8"
           style="vertical-align: middle;"
-        > -->
-        <span class="font-family-body">Virchow</span>
+        >
+        <!-- <span class="font-family-body">Virchow</span> -->
       </span>
     </div>
     <div class="transition-wrapper">

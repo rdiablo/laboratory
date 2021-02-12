@@ -61,12 +61,17 @@
 
 <script>
 import { wip } from '@/helpers.js'
+import gql from 'graphql-tag'
 export default {
   data: () => ({
     error: null,
     disabled: false,
-    username: ''
+    username: '',
+    userid: ''
   }),
+  apollo: {
+    
+  },
   computed: {
     identifier: {
       get () {
@@ -78,6 +83,29 @@ export default {
     }
   },
   methods: {
+    async getID(conn) {
+      // 调用 graphql 变更
+      this.$apollo.query({
+        // 查询语句
+        query: gql`query ($username:String!) {
+          getUserID(username: $username)
+        }`,
+        // 参数
+        variables: {
+          username: conn,
+        },
+      }).then((data) => {
+      // Result
+      // return data.getUserID
+      // return data.data.getUserID
+        this.userid = data.data.getUserID
+        this.$store.commit('retrieveId', data.data.getUserID)
+      }).catch((error) => {
+        // Error
+        console.error(error)
+      })
+     
+    },
     next () {
       if (!this.validEmail(this.identifier)) {
         this.error = 'Enter an valid email address'
@@ -85,8 +113,13 @@ export default {
         return
       }
       this.error = null
-      this.$emit('next', {type:'email', adds: this.identifier})
+      // this.apollo.userid
+      // this.$emit('next', {type:'email', adds: this.identifier})
       // this.$router.push({ name: 'password' })
+      
+
+      this.$store.commit('retrieveId', this.getID(this.identifier))
+      this.$emit('next', {type:'email', adds: this.identifier})
     },
     validEmail (email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

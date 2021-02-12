@@ -17,10 +17,14 @@ export const resolvers = {
   },
   Query: {
     Posts: (root, args, { user, models }) => {
-      if (!user) {
+      // console.log(JSON.stringify(user))
+      //权限判断
+      if (user.user.id != 7) {
         throw new Error('You are not authenticated!');
       }
-      return models.Post.findAll();
+        return models.Post.findAll();
+      
+      
     },
   },
 };

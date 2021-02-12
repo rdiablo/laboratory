@@ -167,9 +167,9 @@ export default {
 
 <style>
   .sleep-video {
-    -webkit-filter: blur(20px) saturate(800%);
-    filter: blur(20px) saturate(800%);
-    opacity: .5;
+    -webkit-filter: blur(20px) saturate(500%) contrast(60%);
+    filter: blur(20px) saturate(500%) contrast(60%);
+    opacity: .4;
     left: 0;
     top: 0;
     height: 125%;
@@ -184,7 +184,10 @@ export default {
     background-color: #ffffff;
   }
   .offline {
-    background-color: rgb(25, 22, 53) !important;
+    /* background-color: rgb(25, 22, 53) !important; */
+    background: -webkit-linear-gradient(#6176d4,#354db9,#1f1a69,#100d38,#000000) !important;
+    background: linear-gradient(#6176d4,#354db9,#1f1a69,#100d38,#000000) !important;
+    
   }
   .overflow-hidden {
     overflow:auto !important;

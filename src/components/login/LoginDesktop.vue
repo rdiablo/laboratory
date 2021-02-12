@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-card
-      class="auth-card elevation-6"
+      class="auth-card elevation-9"
       :class="{ signup: $route.name === 'signup' }"
       style=""
       outlined
@@ -45,6 +45,8 @@ export default {
     width: 450px;
     min-height: 500px;
     overflow: hidden;
+    // background: -webkit-linear-gradient(#fff,#fff,#c5d8ff,#3b89ff) !important;
+    // background: linear-gradient(#fff,#fff,#c5d8ff,#3b89ff) !important;
   }
   .auth-card.signup {
     width: 750px;
