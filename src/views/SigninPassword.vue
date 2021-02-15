@@ -101,7 +101,7 @@ export default {
       // console.log(this.password)
       this.getToken(this.$store.state.uid, this.password)
       // console.log(comlog)
-      // this.$emit('next', {type:'pass', pass: this.password})
+      this.$emit('next', {type:'pass', pass: this.password})
     }
   }
 }

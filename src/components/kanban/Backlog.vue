@@ -6,7 +6,8 @@
       <div class="card-block">
         <h5 class="card-title">
           <span class="text-muted">#{{item.id}}</span>
-          {{item.text}} <span :class="badgeClass(item)">{{badgeText(item)}}</span>
+          {{item.text}} 
+          <!-- <span :class="badgeClass(item)">{{badgeText(item)}}</span> -->
         </h5>
       </div>
     </div>
@@ -38,11 +39,7 @@ export default {
     'new-item': NewItemForm,
   },
   computed: mapState({
-    items: store => [
-      ...store.items.todo,
-      ...store.items.inProgress,
-      ...store.items.done,
-    ],
+    items: store => [].concat.apply([],Object.values(store.items))
   }),
   methods: {
     itemLane(item) {

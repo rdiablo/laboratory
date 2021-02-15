@@ -16,7 +16,10 @@ export const resolvers = {
   //   email: () => '123456',
   // },
   Query: {
-    Hellos: (root, args, { models }) => {
+    Hellos: (root, args, { user, models }) => {
+      if (user.user.id != 7) {
+        throw new Error('You are not authenticated!');
+      }
       return models.Hellos.findAll();
     },
   },

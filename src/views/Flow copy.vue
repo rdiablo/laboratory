@@ -9,7 +9,8 @@
               x: 10,
               y: 10,
               name: 'New',
-              type: 'operation'
+              type: 'operation',
+              approvers: [],
             })
           "
         >
@@ -73,24 +74,27 @@ export default {
           id: 2,
           x: 180,
           y: 220,
-          name: "to",
+          name: "Operation",
           type: "operation",
+          approvers: [{ id: 2, name: "取样" }],
           width: 120,
         },
         {
           id: 3,
           x: 420,
           y: 220,
-          name: "in",
+          name: "Operation",
           type: "operation",
+          approvers: [{ id: 3, name: "测序" }],
           width: 120,
         },
         {
           id: 4,
           x: 640,
           y: 220,
-          name: "done",
+          name: "Operation",
           type: "operation",
+          approvers: [{ id: 3, name: "报告" }],
           width: 120,
         }
       ],
@@ -136,8 +140,8 @@ export default {
       });
     },
     async handleChartSave(nodes, connections) {
-      // console.log(connections);
-      // console.log(nodes)
+      console.log(connections);
+      console.log(nodes)
       // await this.$apollo.mutate({
       //   mutation: gql`mutation ($id: ID!, $type: String!) {
       //     saveFlow(id: $id, type: $type)
@@ -151,12 +155,6 @@ export default {
       // }).catch((errors) => {
       //   console.error(errors)
       // })
-      let nodearr = this.$store.state.items
-      nodes.forEach(el => {
-        if(el.name) this.$set(nodearr, el.name, [])
-        // if(el.name) nodearr[el.name] = []
-      });
-      this.$store.commit('assignItems', nodearr)
     },
     handleEditNode(node) {
       this.nodeForm.target = node;
@@ -208,7 +206,11 @@ export default {
           ? "All"
           : node.type === "end"
           ? "End"
-          : node.name;
+          : !node.approvers || node.approvers.length === 0
+          ? "No approver"
+          : node.approvers.length > 1
+          ? `${node.approvers[0].name + "..."}`
+          : node.approvers[0].name;
 
       let bodyTextY;
       bodyTextY = node.y + 5 + roundTo20(node.height) / 2;
@@ -223,9 +225,20 @@ export default {
           return text;
         })
         .each(function wrap() {
+          // let self = d3.select(this),
+          //   textLength = self.node().getComputedTextLength(),
+          //   text = self.text();
+          // while (textLength > node.width - 2 * 4 && text.length > 0) {
+          //   text = text.slice(0, -1);
+          //   self.text(text + "...");
+          //   textLength = self.node().getComputedTextLength();
+          // }
           if (node.type == "operation" && d3.select(this).node().getComputedTextLength() > 120) node.width = d3.select(this).node().getComputedTextLength() + 10
         });
         
+      //   node.width = node.approvers[0].name.length * 8 + 8
+      // }
+        // if(node.type == "operation" && node.approvers[0].name) console.log(gtext._groups[0][0])
     },
   }
 };

@@ -49,32 +49,26 @@ export default {
       if (this.items.length === 1) return '1 task';
       return `${this.items.length} tasks`;
     },
-    // bcolor() {
-    //   return 'secondary'
-    // },
-    // myitems (){
-    //   return this.$store.state.items.done;
-    // }
   },
   watch: {
     '$store.state.items': {
         immediate: true,
         handler() {
           this.getColor()
+          console.log('看板变化')
         }
      }
   },
   methods: {
     getColor() {
-      console.log('go')
       let that = this
       let obj = this.$store.state.items
       Object.keys(obj).forEach(function(key){
         obj[key].find(el => {
           if( el.id == that.$props.item.id ) {
-            if(key == 'done'){
-              that.bcolor = 'green'
-            }
+            // if(key == 'done'){
+            //   that.bcolor = 'green'
+            // }
           }
         })
       })

@@ -1,6 +1,6 @@
 <template>
-  <v-app class="overflow-hidden" v-bind:class="[online ? activeClass : '', errorClass]">
-    <video class="sleep-video" playsinline autoplay muted loop>
+  <v-app class="overflow-hidden" v-bind:class="[online ? activeClass : 'aoffline']">
+    <video v-if="!online" class="sleep-video" playsinline autoplay muted loop>
       <source :src="require('./assets/video.mp4')" type="video/mp4">
     </video>
     <v-navigation-drawer v-if="online" permanent expand-on-hover app>
@@ -97,8 +97,8 @@
 <script>
 export default {
   data: () => ({
-    activeClass: 'online',
-    errorClass: 'offline',
+    activeClass: 'aonline',
+    errorClass: 'aoffline',
     fixed: false,
     clipped: false,
     items: [
@@ -180,10 +180,11 @@ export default {
     z-index: 0;
     object-fit: cover;
   }
-  .online {
-    background-color: #ffffff;
+  .aonline {
+    background:none !important;
+    background-color: #ffffff !important;
   }
-  .offline {
+  .aoffline {
     /* background-color: rgb(25, 22, 53) !important; */
     background: -webkit-linear-gradient(#6176d4,#354db9,#1f1a69,#100d38,#000000) !important;
     background: linear-gradient(#6176d4,#354db9,#1f1a69,#100d38,#000000) !important;

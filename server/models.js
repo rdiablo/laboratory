@@ -7,12 +7,12 @@ if(db) {
 	console.log('mongodb connected successfully');
 	global.db = db;
 }
-// const MySchema = mongoose.Schema({
-// 	_id: String,
-// 	email: String,
-// 	lastIP: String,
-// });
-// const MyModel = db.model('Hello', MySchema);
+const MySchema = mongoose.Schema({
+	_id: String,
+	email: String,
+	lastIP: String,
+});
+const MyModel = db.model('Hello', MySchema);
 
 // MyModel.find({}, function (err, docs) {
 // 	if(err) {
@@ -21,22 +21,22 @@ if(db) {
 // 		return docs
 // 	}
 	
-  // docs.forEach
+//   docs.forEach
 // });
 // const MyModel = connection.model('Hello', models);
 // MyModel.find({ size: 'small' })
-// const HelloFields = {
-//   email: {
-//     type: GraphQLString
-//   },
-//   lastIP: {
-//     type: GraphQLString
-//   }
-// }
-// const HelloType = new GraphQLObjectType({
-//   name: 'Hello',
-//   fields: HelloFields
-// });
+const HelloFields = {
+  email: {
+    type: GraphQLString
+  },
+  lastIP: {
+    type: GraphQLString
+  }
+}
+const HelloType = new GraphQLObjectType({
+  name: 'Hello',
+  fields: HelloFields
+});
 // const myhello = {
 // 	type: new GraphQLList(HelloType),
 // 	async resolve (root, params, options) {

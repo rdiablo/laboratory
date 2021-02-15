@@ -93,6 +93,9 @@ const apolloProvider = new VueApollo({
 
 
 new Vue({
+  data:{
+    items:[]
+  },
   mounted() {},
   vuetify,
   router,

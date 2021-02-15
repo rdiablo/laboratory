@@ -20,15 +20,18 @@ export default new Vuex.Store({
     loading: false,
     disabled: false,
     items: {
-      todo: [],
-      inProgress: [],
-      done: [],
+      // 'to':[],
+      // 'in':[],
+      // 'done':[]
     },
     nextId: 1,
   },
   mutations: {
     retrieveToken(state, token) {
       state.token = token
+    },
+    assignItems(state, items) {
+      Object.assign(state.items, items);
     },
     destroyToken(state) {
       state.token = null
@@ -72,11 +75,12 @@ export default new Vuex.Store({
       return fetch.getApi('/home', param)
     },
     addItem(state, item) {
-      state.items.todo.push(Object.assign(item, { id: state.nextId }));
+      state.items.to.push(Object.assign(item, { id: state.nextId }));
       state.nextId += 1;
     },
     updateItems(state, { items, id }) {
-      state.items[id] = items;
+      // state.items[id] = items;
+      Vue.set(state.items, id, items)
     },
     getItems: state => {
       return state.items
@@ -223,13 +227,13 @@ export default new Vuex.Store({
     },
   },
   getters: {
-    getItems: (state) => (id) => {
-      return state.items.find(item => item.id === id)
+    // getItems: (state) => (id) => {
+    //   return state.items.find(item => item.id === id)
       // state.items.map((value) => {
       //   return value
       // })
       // return state.items
-    },
+    // },
     loggedIn(state) {
       return state.token !== null
     },
