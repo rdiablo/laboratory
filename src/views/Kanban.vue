@@ -1,5 +1,5 @@
 <template>
-<KanbanBoard></KanbanBoard>
+  <KanbanBoard></KanbanBoard>
 </template>
 
 

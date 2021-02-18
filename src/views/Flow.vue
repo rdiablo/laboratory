@@ -162,7 +162,7 @@ export default {
       this.nodeForm.target = node;
       this.nodeDialogVisible = true;
     },
-    handleEditConnection(connection) {
+    async handleEditConnection(connection) {
       this.connectionForm.target = connection;
       this.connectionDialogVisible = true;
     },
@@ -172,7 +172,8 @@ export default {
       // if (node.type == "operation" && node.approvers[0].name) {
       //   node.width = node.approvers[0].name.length * 8 + 8
       // }
-      let borderColor = isSelected ? "#666666" : "#bbbbbb";
+      let border = isSelected ? "1px" : "0";
+      let borderColor = isSelected ? "#d13666" : "#bbbbbb";
       let color =
         node.type === "start"
           ? "#999999"
@@ -185,7 +186,7 @@ export default {
       body
         .style("width", node.width + "px")
         .style("fill", color)
-        .style("stroke-width", 0);
+        .style("stroke-width", border);
       if (node.type !== "start" && node.type !== "end" && node.type !== "all") {
         body.attr("x", node.x).attr("y", node.y).attr("rx", 6);
         body.style("height", roundTo20(node.height) + "px");

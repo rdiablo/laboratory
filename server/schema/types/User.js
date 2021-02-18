@@ -7,11 +7,12 @@ export const typeDef = gql`
     id: String!
     password: String!
     username: String
+    token: String!
   }
-  
   extend type Query {
     getUser(id: ID!): User
     getUserID(username: String!): ID
+    cektoken(id: ID!, token: String!): String
   }
   extend type Mutation {
     login(id: ID!, password: String!): String
@@ -26,6 +27,24 @@ export const resolvers = {
     },
     getUserID: async (root, { username }, { models }) => {
       return models.User.findOne({ username });
+    },
+    cektoken: async (root, { id },{ body, models }) => {
+      const user = await models.User.findById({ id });
+      if (!user) {
+        throw new Error('No user with that id');
+      }
+      const authHeader = body.headers.authorization || ''
+      const token = authHeader.split(' ')[1]
+      const valid = await jsonwebtoken.verify(token, process.env.JWT_SECRET, (err, users) => {
+        if (err) {
+          return new Error('无效的 token');
+        }
+        return users
+      });
+      if (!valid) {
+        throw new Error('Incorrect token');
+      }
+      return models.User.returnUser({ user,valid })
     },
   },
   Mutation: {
@@ -64,6 +83,6 @@ export const resolvers = {
         process.env.JWT_SECRET,
         { expiresIn: '1d' },
       );
-    },
+    }
   },
 };

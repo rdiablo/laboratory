@@ -66,13 +66,21 @@ export default {
   data: () => ({
     error: null,
     disabled: false,
-    username: '',
+    // username: this.$store.state.username,
     userid: ''
   }),
   apollo: {
     
   },
   computed: {
+    // username: {
+    //   get () {
+    //     return this.$store.state.username
+    //   },
+    //   set (value) {
+    //     this.$store.commit('retrieveUsername', value)
+    //   }
+    // },
     identifier: {
       get () {
         return this.$store.state.identifier
@@ -82,6 +90,42 @@ export default {
       }
     }
   },
+  created: function () {
+    let juser = localStorage.getItem('JWT_USER')
+    this.$store.commit('updateIdentifier', juser)
+  },
+  // created: function () {
+  //   let jid = localStorage.getItem('JWT_ID')
+  //   let jtoken = localStorage.getItem('JWT_TOKEN')
+  //   if(jtoken){
+  //     this.$apollo.query({
+  //       query: gql`query ($id: ID!, $token: String!) {
+  //         cektoken(
+  //           id: $id,
+  //           token: $token
+  //         )
+  //       }`,
+  //       variables: {
+  //         id: jid,
+  //         token: jtoken
+  //       },
+  //     }).then((data) => {
+  //       // console.log("登陆成功" + JSON.stringify(data))
+  //       // console.log(data.data.cektoken)
+  //       this.$store.commit('updateIdentifier', data.data.cektoken)
+  //       this.$emit('next', {type:'email', adds: this.identifier})
+  //       setTimeout(()=>{
+  //           this.$router.push({ name: 'home' })
+  //         },5000
+  //       )
+        
+  //       // this.$emit('next', {type:'email', adds: this.identifier})
+  //     }).catch((errors) => {
+  //       // Error
+  //       console.error(errors)
+  //     })
+  //   }
+  // },
   methods: {
     async getID(conn) {
       // 调用 graphql 变更
@@ -98,8 +142,12 @@ export default {
       // Result
       // return data.getUserID
       // return data.data.getUserID
+        
         this.userid = data.data.getUserID
+        localStorage.setItem('JWT_ID', this.userid)
+        localStorage.setItem('JWT_USER', conn)
         this.$store.commit('retrieveId', data.data.getUserID)
+        this.$emit('next', {type:'email', adds: this.identifier})
       }).catch((error) => {
         // Error
         console.error(error)
@@ -116,10 +164,14 @@ export default {
       // this.apollo.userid
       // this.$emit('next', {type:'email', adds: this.identifier})
       // this.$router.push({ name: 'password' })
-      
+      if(localStorage.getItem('JWT_TOKEN')) {
+        this.$emit('next', {type:'email', adds: this.identifier})
+      } else {
+        this.$store.commit('retrieveId', this.getID(this.identifier))
+      }
 
-      this.$store.commit('retrieveId', this.getID(this.identifier))
-      this.$emit('next', {type:'email', adds: this.identifier})
+      
+      // this.$emit('next', {type:'email', adds: this.identifier})
     },
     validEmail (email) {
       var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/

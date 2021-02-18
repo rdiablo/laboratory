@@ -2,8 +2,9 @@
   <v-row no-gutters>
     <v-col>
       <v-card
-        elevation="2"
+        elevation="0"
         tile
+        outlined
         class="rounded"
       >
       <v-toolbar
@@ -39,6 +40,7 @@ export default {
   props: ['item'],
   data () {
     return {
+      selected: [],
       // myitem : this.$store.state.items.done
       bcolor: 'secondary'
     }

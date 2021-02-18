@@ -1,16 +1,16 @@
 <template>
-  <v-card class="card" style="height:100%">
-    <v-card-title>{{title}}</v-card-title>
-    <v-card-text style="height:100%">
-      <draggable v-model="draggables" group="default" style="background-color:transparent;height:100%">
-        <v-container v-for="item in items" :key="item.id">
+  <v-card
+      elevation="0"
+      outlined class="card pa-0 ma-0" style="height:inherit;width:340px;background:#f9f9f9">
+    <v-card-title style="white-space: nowrap;">{{title}} {{itemCount}}</v-card-title>
+    <v-card-text style="height:inherit;" class="card pa-0 ma-0 pt-16 mt-n16">
+      <draggable v-model="draggables" group="default" style="height:inherit;overflow:auto;">
+        <v-container class="pt-0" v-for="item in items" :key="item.id" style="display:block">
           <item :item="item"></item>
         </v-container>
       </draggable>
     </v-card-text>
-    <v-card-text>
-      {{itemCount}}
-    </v-card-text>
+    
   </v-card>
 </template>
 

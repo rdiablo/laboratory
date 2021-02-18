@@ -15,6 +15,7 @@ export default new Vuex.Store({
     imageAll: [],
     uid: '',
     identifier: '',
+    username: '',
     password: '',
     online: false,
     loading: false,

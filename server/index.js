@@ -1,7 +1,7 @@
 import 'dotenv/config.js';
 import Koa from 'koa';
 import { ApolloServer,AuthenticationError } from 'apollo-server-koa';
-import jwt from 'koa-jwt';
+// import jwt from 'koa-jwt';
 import jsonwebtoken from 'jsonwebtoken';
 import 'babel-polyfill';
 import schema from './schema/index.js';
@@ -10,7 +10,7 @@ const app = new Koa();
 
 
 
-app.use(jwt({ secret: process.env.JWT_SECRET, passthrough: true }));
+// app.use(jwt({ secret: process.env.JWT_SECRET, passthrough: true }));
 
 // const context = ({ req }) => {
 //   const token = req.headers.authorization || ''
@@ -24,12 +24,58 @@ app.use(jwt({ secret: process.env.JWT_SECRET, passthrough: true }));
 //   }
 // }
 
+// const ctk => (ctx) ({
+//   const authHeader = ctx.request.headers.authorization || ''
+//   const token = authHeader.split(' ')[1]
+//   if (authHeader) {
+//     jsonwebtoken.verify(token, process.env.JWT_SECRET, (err, user) => {
+//         if (err) {
+//           return ctx.sendStatus(403);
+//         }
+//         ctx.user = user
+//         console.log(user)
+//         return user
+//     });
+//   } else {
+//     ctx.sendStatus(401);
+//   }
+// })
+
+
 const server = new ApolloServer({
   schema,
-  context: ({ ctx: { state: user } }) => ({
+  context: ({ ctx: { state: user,request: body } }) => ({
     user,
+    body,
     models,
   }),
+  // context : ({ ctx }) => {
+  //   const authHeader = ctx.request.headers.authorization || ''
+  //   const token = authHeader.split(' ')[1]
+  //   console.log(token)
+  // },
+  // context : ({ ctx: { state: user } }) => {
+  //   const authHeader = ctx.request.headers.authorization || ''
+  //   const token = authHeader.split(' ')[1]
+  //   if (authHeader) {
+  //     jsonwebtoken.verify(token, process.env.JWT_SECRET, (err, users) => {
+  //         if (err) {
+  //           return ctx.sendStatus(403);
+  //         }
+  //         ctx.user = users
+  //         return user
+  //     });
+  //   } else {
+  //     ctx.sendStatus(401);
+  //   }
+    // try {
+    //   return { id } = jsonwebtoken.verify(token.split(' ')[1], SECRET_KEY)
+    // } catch (e) {
+    //   throw new AuthenticationError(
+    //     'Authentication token is invalid, please log in',
+    //   )
+    // }
+  // },
   // context : ({ ctx }) => {
   //   const token = ctx.request.headers.authorization || ''
   //   // console.log(token.split(' ')[1])

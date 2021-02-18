@@ -70,6 +70,37 @@ export default {
     password: '',
     token: ''
   }),
+  created: function () {
+    let jid = localStorage.getItem('JWT_ID')
+    let jtoken = localStorage.getItem('JWT_TOKEN')
+    if(jtoken){
+      this.password = '******'
+      this.$apollo.query({
+        query: gql`query ($id: ID!, $token: String!) {
+          cektoken(
+            id: $id,
+            token: $token
+          )
+        }`,
+        variables: {
+          id: jid,
+          token: jtoken
+        },
+      }).then((data) => {
+        this.$store.commit('updateIdentifier', data.data.cektoken)
+        
+        // setTimeout(()=>{
+        //     this.$emit('next', {type:'pass'})
+        //   },5000
+        // )
+        
+        this.$emit('next', {type:'pass'})
+      }).catch((errors) => {
+        // Error
+        console.error(errors)
+      })
+    }
+  },
   computed: {
   },
   methods: {

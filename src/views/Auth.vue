@@ -32,15 +32,15 @@ export default {
           this.$router.push({ name: 'password' })
         }, 1000)
       }
-      if(conn.type == 'pass' && conn.pass == "abc"){
+      if(conn.type == 'pass'){
         
         this.loading = true
         this.disabled = true
         setTimeout(() => {
           this.loading = false
           this.disabled = false
+          this.$store.state.online = true
           this.$router.push({ name: 'home' })
-          this.$store.commit('updatePassword', conn.pass)
         }, 1000)
       }
     },

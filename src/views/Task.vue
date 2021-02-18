@@ -1,5 +1,7 @@
 <template>
+<v-app>
 <TaskLane></TaskLane>
+</v-app>
 </template>
 
 
