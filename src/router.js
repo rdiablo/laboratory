@@ -17,13 +17,20 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
+      path: '/home',
+      name: 'home',
+      component: Home,
+      meta: {
+        need2Login: true
+      }
+    },
+    {
       path: '/auth',
       component: Auth,
       children: [
         {
           path: 'signin',
           component: Signin,
-          username: '',
           children: [
             {
               path: 'identifier',
@@ -41,23 +48,6 @@ export default new Router({
           name: 'signup'
         }
       ]
-    },
-    {
-      path: '*',
-      redirect: { name: 'signin' }
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: Home
     },{
       path: '/flow',
       name: 'flow',
@@ -70,6 +60,18 @@ export default new Router({
       path: '/task',
       name: 'task',
       component: Task
+    },
+    {
+      path: '/about',
+      name: 'about',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
+    },
+    {
+      path: '*',
+      redirect: { name: 'home' }
     },
   ]
 })

@@ -19,7 +19,8 @@ export default {
   components: { Login },
   data: () => ({
     loading: false,
-    disabled: false
+    disabled: false,
+    reload: ''
   }),
   methods: {
     onNext (conn) {
@@ -29,7 +30,9 @@ export default {
         setTimeout(() => {
           this.loading = false
           this.disabled = false
-          this.$router.push({ name: 'password' })
+          console.log(this.$route.params.path)
+          this.reload = this.$route.params.path
+          this.$router.push({ name: 'password'})
         }, 1000)
       }
       if(conn.type == 'pass'){
@@ -40,7 +43,15 @@ export default {
           this.loading = false
           this.disabled = false
           this.$store.state.online = true
-          this.$router.push({ name: 'home' })
+          // this.$router.push({ name: 'home' })
+
+          this.$store.commit('updateLineState', true)
+          console.log(this.reload)
+          this.$router.replace({
+            path: this.reload
+          });
+
+
         }, 1000)
       }
     },

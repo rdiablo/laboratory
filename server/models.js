@@ -71,8 +71,8 @@ const models = {
       return knex.insert(data).into('User');
     },
     async returnUser(token) {
-      // return token.user.username
-      return JSON.stringify(token).toString()
+      return token.user.username
+      // return JSON.stringify(token).toString()
     },
   },
 };

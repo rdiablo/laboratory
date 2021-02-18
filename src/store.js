@@ -59,6 +59,9 @@ export default new Vuex.Store({
     updateIdentifier (state, identifier) {
       state.identifier = identifier
     },
+    updateLineState (state, value) {
+      state.online = value
+    },
 
     updatePassword (state, password) {
       state.password = password

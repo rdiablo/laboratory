@@ -87,7 +87,12 @@ export default {
           token: jtoken
         },
       }).then((data) => {
+
+      console.log(JSON.stringify(data))
+        localStorage.setItem("online", "true");
+        
         this.$store.commit('updateIdentifier', data.data.cektoken)
+        
         
         // setTimeout(()=>{
         //     this.$emit('next', {type:'pass'})
