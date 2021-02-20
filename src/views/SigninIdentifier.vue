@@ -142,7 +142,8 @@ export default {
       // Result
       // return data.getUserID
       // return data.data.getUserID
-        
+      console.log(JSON.stringify(data))
+        //这里有问题，没有解析 token 的获取结果
         this.userid = data.data.getUserID
         localStorage.setItem('JWT_ID', this.userid)
         localStorage.setItem('JWT_USER', conn)

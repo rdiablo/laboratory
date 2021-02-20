@@ -8,12 +8,14 @@ import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
-import gql from 'graphql-tag'
+import VueCookies from 'vue-cookies'
+
+// import gql from 'graphql-tag'
 // import axios from 'axios'
 
 import './styles/styles.scss'
 
-
+Vue.use(VueCookies)
 Vue.use(VueApollo)
 Vue.config.productionTip = false
 
@@ -91,48 +93,91 @@ const apolloProvider = new VueApollo({
 
 // Vue.prototype.$http = axios;
 
-let online = localStorage.getItem("online"); //获取本地登录状态
+// let cokonline = VueCookies.get('online')
+// let online = localStorage.getItem("online"); //获取本地登录状态
+// // console.log(online +"&&"+ cokonline)
+// const loginset = async function(){
+//   if(online && cokonline) {
+//     if(store.state.online == false) {
+//       let jid = localStorage.getItem('JWT_ID')
+//       let jtoken = localStorage.getItem('JWT_TOKEN')
+//       apolloClient.query({
+//         query: gql`query ($id: ID!, $token: String!) {
+//           cektoken(
+//             id: $id,
+//             token: $token
+//           )
+//         }`,
+//         variables: {
+//           id: jid,
+//           token: jtoken
+//         },
+//       }).then(() => {
+//         store.commit("updateLineState",true)
+//         return true
+//       }).catch((errors) => {
+//         // Error
+//         console.error(errors)
+//         return false
+//       })
+//     } else {
+//       return true
+//     }
+//   }  else {
+//     return false
+//   }
+// }
+// console.log(online +"&&"+ cokonline)
+// if(online && cokonline){
+//   if(!store.state.online) {
+//     let jid = localStorage.getItem('JWT_ID')
+//     let jtoken = localStorage.getItem('JWT_TOKEN')
+//     apolloClient.query({
+//       query: gql`query ($id: ID!, $token: String!) {
+//         cektoken(
+//           id: $id,
+//           token: $token
+//         )
+//       }`,
+//       variables: {
+//         id: jid,
+//         token: jtoken
+//       },
+//     }).then(() => {
+//       console.log("看起来 token 没过期！")
+//       store.commit("updateLineState",true)
+//     }).catch((errors) => {
+//       // Error
+//       console.error(errors)
+//     })
+//   }
+// }
 
-if(online){
-  if(!store.state.online) {
-    let jid = localStorage.getItem('JWT_ID')
-    let jtoken = localStorage.getItem('JWT_TOKEN')
-    apolloClient.query({
-      query: gql`query ($id: ID!, $token: String!) {
-        cektoken(
-          id: $id,
-          token: $token
-        )
-      }`,
-      variables: {
-        id: jid,
-        token: jtoken
-      },
-    }).then(() => {
-      console.log("看起来 token 没过期！")
-      store.commit("updateLineState",true)
-    }).catch((errors) => {
-      // Error
-      console.error(errors)
-    })
-    
-  }
+
+
+// 退出当前页面执行
+window.onunload = function(){ // ios 不支持 window.onbeforeunload()
+  // 将退出时间存于localstorage中
+  localStorage.setItem('leaveTime', new Date().getTime());
 }
 
+// window.onbeforeunload = function () {
+//   VueCookies.remove('online');
+// };
+let online = localStorage.getItem("online")
 router.beforeEach((to, from, next)=>{
   to.matched.some((route) => {
-      // to.matched.forEach((route) => {
       if (route.meta.need2Login) { //通过此操作可以判断哪些页面需要登录
-          
-          if (store.state.online || localStorage.getItem('online')) {
-            if(store.state.online == null) console.log("检验token过期")
-              next()
+          if (VueCookies.get('online')) {
+            if(!store.state.online) store.commit("updateLineState",true)
+            next()
+          } else if (online && store.state.online) {
+            next()
           } else {
-              next({ name: 'signin', params: { path: route.path } })
+            next({ name: 'signin', params: { path: route.path , query: { redirect: to.fullPath }} })
           }
       } else {
-
-          next();
+        next()
       }
   });
 

@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server-koa';
+import { gql,AuthenticationError } from 'apollo-server-koa';
 import bcrypt from 'bcrypt';
 import jsonwebtoken from 'jsonwebtoken';
 
@@ -35,9 +35,10 @@ export const resolvers = {
       }
       const authHeader = body.headers.authorization || ''
       const token = authHeader.split(' ')[1]
+      console.log(token)
       const valid = await jsonwebtoken.verify(token, process.env.JWT_SECRET, (err, users) => {
         if (err) {
-          return new Error('无效的 token');
+          throw new AuthenticationError('无效的 token');
         }
         return users
       });

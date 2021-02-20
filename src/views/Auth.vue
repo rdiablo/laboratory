@@ -40,18 +40,22 @@ export default {
         this.loading = true
         this.disabled = true
         setTimeout(() => {
+          // this.$store.state.online = true
+          // this.$router.push({ name: 'home' })
+          document.cookie = 'online' + "=" +true; 
+          localStorage.setItem("online", "true");
+          // this.$cookies.set('online',true)
+          this.$store.commit('updateLineState', true)
+          
           this.loading = false
           this.disabled = false
-          this.$store.state.online = true
-          // this.$router.push({ name: 'home' })
-
-          this.$store.commit('updateLineState', true)
-          console.log(this.reload)
-          this.$router.replace({
-            path: this.reload
-          });
-
-
+          if (this.reload) {
+            this.$router.replace({
+              path: this.reload
+            });
+          } else {
+            this.$router.push({ name: 'home' })
+          }
         }, 1000)
       }
     },

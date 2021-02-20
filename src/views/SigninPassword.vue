@@ -23,13 +23,14 @@
         </v-avatar>
       </v-chip>
 
-      <v-form>
+      <v-form ref="form">
         <v-text-field
           class="mb-10"
           :append-icon="show ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
           :label="$vuetify.lang.t('$vuetify.auth.sign-in-password.enter-password')"
           v-model.lazy="password"
           name="password"
+          :rules="passwordRules"
           :type="show ? 'input' : 'password'"
           hide-details="auto"
           outlined
@@ -68,12 +69,14 @@ export default {
   data: () => ({
     show: false,
     password: '',
+    passwordRules: [],
     token: ''
   }),
   created: function () {
     let jid = localStorage.getItem('JWT_ID')
     let jtoken = localStorage.getItem('JWT_TOKEN')
-    if(jtoken){
+    let online = localStorage.getItem('online')
+    if(jtoken && online){
       this.password = '******'
       this.$apollo.query({
         query: gql`query ($id: ID!, $token: String!) {
@@ -87,10 +90,9 @@ export default {
           token: jtoken
         },
       }).then((data) => {
-
-      console.log(JSON.stringify(data))
+         
+      // console.log(JSON.stringify(data))
         localStorage.setItem("online", "true");
-        
         this.$store.commit('updateIdentifier', data.data.cektoken)
         
         
@@ -101,12 +103,21 @@ export default {
         
         this.$emit('next', {type:'pass'})
       }).catch((errors) => {
+        // console.log(JSON.stringify(errors))
         // Error
-        console.error(errors)
+        // console.log(errors.graphQLErrors[0].message)
+        this.passwordRules = [errors.graphQLErrors[0].message]
+        this.$refs['form'].validate('passwordRules')
+        this.password = ''
+        // console.error(errors)
       })
     }
   },
   computed: {
+    rules () {
+      const passwordRules = []
+      return passwordRules
+    }
   },
   methods: {
     wip,
@@ -126,6 +137,7 @@ export default {
         // Result
         // console.log(data.data.login)
         this.$store.dispatch('retrieveToken', data.data.login)
+        this.$emit('next', {type:'pass', pass: this.password})
         // this.$emit('next', {type:'pass', pass: this.password})
       }).catch((errors) => {
         // Error
@@ -135,9 +147,10 @@ export default {
     passwords() {
       // console.log(this.$store.state.uid)
       // console.log(this.password)
-      this.getToken(this.$store.state.uid, this.password)
+      let localid = this.$store.state.uid || localStorage.getItem("JWT_ID")
+      this.getToken(localid, this.password)
       // console.log(comlog)
-      this.$emit('next', {type:'pass', pass: this.password})
+      
     }
   }
 }
