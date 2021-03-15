@@ -45,6 +45,7 @@ export const resolvers = {
       if (!valid) {
         throw new Error('Incorrect token');
       }
+      // return models.User.returnUser({ user,valid })
       return models.User.returnUser({ user,valid })
     },
   },

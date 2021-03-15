@@ -76,6 +76,16 @@ export default {
         icon: "mdi-card-bulleted-settings-outline",
         title: "任务",
         to: "/task"
+      },
+      {
+        icon: "mdi-finance",
+        title: "财务",
+        to: "/finance"
+      },
+      {
+        icon: "mdi-table-arrow-up",
+        title: "数据上传",
+        to: "/upload"
       }
     ],
     miniVariant: false,

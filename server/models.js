@@ -2,7 +2,7 @@ import knex from './sql/connector.js';
 import { GraphQLList, GraphQLString, GraphQLObjectType } from 'graphql';
 
 import mongoose from 'mongoose';
-const db = mongoose.createConnection('mongodb://192.168.41.182:27021/test',{ useNewUrlParser: true, useUnifiedTopology: true});
+const db = mongoose.createConnection('mongodb://192.168.41.147:27021/test',{ useNewUrlParser: true, useUnifiedTopology: true});
 if(db) {
 	console.log('mongodb connected successfully');
 	global.db = db;
@@ -54,6 +54,50 @@ const models = {
   Post: {
     async findAll() {
       return knex.select().from('Post');
+    },
+    async finds(data) {
+      let datas =''
+      if(isNaN(data.accdate)&&!isNaN(Date.parse(data.accdate)) && data.accdate == null) {
+        datas = await knex.select().from('Finance').where(data);
+      } else {
+        datas = await knex.select().from('Finance').where('accdate','like','%'+ data.accdate +'%').limit(1);
+      }
+      if (datas) return datas;
+      return null;
+    },
+    async finddates(data) {
+      let datas
+      if(data.undatafilter && !data.datafilter) {
+        let arr = data.undatafilter.join("|")
+        datas = await knex.select().from('Finance')
+        .where('accdate','>=',data.accdatestart)
+        .andWhere('accdate','<=',data.accdateend)
+        .andWhereNot('item','regexp',arr);
+      } else if (!data.undatafilter && data.datafilter) {
+        let arr = data.datafilter.join("|")
+        datas = await knex.select().from('Finance')
+        .where('accdate','>=',data.accdatestart)
+        .andWhere('accdate','<=',data.accdateend)
+        .andWhere('item','regexp',arr);
+      } else if (data.undatafilter && data.datafilter) {
+        let arr1 = data.undatafilter.join("|")
+        let arr2 = data.datafilter.join("|")
+        datas = await knex.select().from('Finance')
+        .where('accdate','>=',data.accdatestart)
+        .andWhere('accdate','<=',data.accdateend)
+        .andWhereNot('item','regexp',arr1)
+        .andWhere('item','regexp',arr2);
+      } else {
+        datas = await knex.select().from('Finance')
+        .where('accdate','>=',data.accdatestart)
+        .andWhere('accdate','<=',data.accdateend);
+      }
+      console.log(datas.length)
+      if (datas) return datas;
+      return null;
+    },
+    async create(data) {
+      return knex.insert(data).into('Finance');
     },
   },
   User: {

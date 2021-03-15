@@ -19,6 +19,7 @@
     "@babel/polyfill": "^7.12.1",
     "@babel/preset-env": "^7.12.13",
     "@babel/register": "^7.12.13",
+    "@handsontable/vue": "^4.1.1",
     "apollo-boost": "^0.4.9",
     "apollo-link-context": "^1.0.20",
     "apollo-server-koa": "^2.19.2",
@@ -32,7 +33,10 @@
     "bcrypt": "^5.0.0",
     "core-js": "^3.6.5",
     "d3": "^5.15.0",
+    "file-saver": "^2.0.2",
+    "fs-extra": "^8.1.0",
     "graphql": "^15.5.0",
+    "handsontable": "^7.2.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.19.5",
     "koa": "^2.13.1",
@@ -52,7 +56,8 @@
     "vue-router": "^3.2.0",
     "vuedraggable": "^2.24.3",
     "vuetify": "^2.2.11",
-    "vuex": "^3.6.2"
+    "vuex": "^3.6.2",
+    "xlsx": "^0.16.9"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -76,19 +81,17 @@
     "vuetify-loader": "^1.3.0"
   },
   "eslintConfig": {
-    "root": true,
+    "root": false,
     "env": {
-      "node": true
+      "node": false
     },
     "extends": [
-      "plugin:vue/essential",
-      "eslint:recommended"
+      "plugin:vue/essential"
     ],
     "parserOptions": {
       "parser": "babel-eslint"
     },
     "rules": {
-      "no-console": "off"
     }
   },
   "postcss": {

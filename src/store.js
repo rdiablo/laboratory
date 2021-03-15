@@ -17,6 +17,11 @@ export default new Vuex.Store({
     identifier: '',
     username: '',
     password: '',
+    tree: [],
+    tree2: [],
+    addap: 0,
+    addfs: 0,
+    adders: 0,
     online: false,
     loading: false,
     disabled: false,
@@ -30,6 +35,40 @@ export default new Vuex.Store({
   mutations: {
     retrieveToken(state, token) {
       state.token = token
+    },
+    increment (state,payload) {
+      state.tree.push(payload.tree)
+    },
+    increment2 (state,payload) {
+      state.tree2.push(payload.tree)
+    },
+    addsum (state) {
+      state.addap++
+    },
+    fosum (state) {
+      state.addfs++
+    },
+    errsum (state) {
+      state.adders++
+    },
+    clsum (state) {
+      state.addap = 0
+      state.addfs = 0
+    },
+    aleatType (state,payload) {
+      state.atype = payload
+    },
+    pops (state) {
+      if(state.snackbar == true) {
+        state.snackbar = false
+      } else {
+        state.snackbar = true
+      }
+      // if(state.overlay == true) {
+      //   state.overlay = false
+      // } else {
+      //   state.overlay = true
+      // }
     },
     assignItems(state, items) {
       Object.assign(state.items, items);

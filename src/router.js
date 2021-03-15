@@ -4,7 +4,8 @@ import Home from './views/Home'
 import Flow from './views/Flow'
 import Kanban from './views/Kanban'
 import Task from './views/Task'
-
+import Finance from './views/Finance'
+import Upload from './views/Upload'
 import Auth from './views/Auth'
 import Signin from './views/Signin'
 import SigninIdentifier from './views/SigninIdentifier'
@@ -66,6 +67,14 @@ export default new Router({
       path: '/task',
       name: 'task',
       component: Task
+    },{
+      path: '/finance',
+      name: 'finance',
+      component: Finance
+    },{
+      path: '/upload',
+      name: 'upload',
+      component: Upload
     },
     {
       path: '/about',

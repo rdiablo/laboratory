@@ -23,7 +23,7 @@
         </v-avatar>
       </v-chip>
 
-      <v-form ref="form">
+      <v-form ref="form" :disabled="disable">
         <v-text-field
           class="mb-10"
           :append-icon="show ? 'mdi-eye-off-outline' : 'mdi-eye-outline'"
@@ -67,6 +67,7 @@ import { wip } from '@/helpers.js'
 import gql from 'graphql-tag'
 export default {
   data: () => ({
+    disable: false,
     show: false,
     password: '',
     passwordRules: [],
@@ -77,6 +78,7 @@ export default {
     let jtoken = localStorage.getItem('JWT_TOKEN')
     let online = localStorage.getItem('online')
     if(jtoken && online){
+      this.disable = true
       this.password = '******'
       this.$apollo.query({
         query: gql`query ($id: ID!, $token: String!) {
@@ -90,9 +92,8 @@ export default {
           token: jtoken
         },
       }).then((data) => {
-         
-      // console.log(JSON.stringify(data))
-        localStorage.setItem("online", "true");
+        this.disable = false
+      console.log(JSON.stringify(data))
         this.$store.commit('updateIdentifier', data.data.cektoken)
         
         
@@ -103,7 +104,8 @@ export default {
         
         this.$emit('next', {type:'pass'})
       }).catch((errors) => {
-        // console.log(JSON.stringify(errors))
+        console.log(JSON.stringify(errors))
+        this.disable = false
         // Error
         // console.log(errors.graphQLErrors[0].message)
         this.passwordRules = [errors.graphQLErrors[0].message]

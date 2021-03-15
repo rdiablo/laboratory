@@ -1,8 +1,7 @@
 import 'dotenv/config.js';
 import Koa from 'koa';
 import { ApolloServer,AuthenticationError } from 'apollo-server-koa';
-// import jwt from 'koa-jwt';
-import jsonwebtoken from 'jsonwebtoken';
+import jwt from 'koa-jwt';
 import 'babel-polyfill';
 import schema from './schema/index.js';
 import models from './models.js';
@@ -10,7 +9,7 @@ const app = new Koa();
 
 
 
-// app.use(jwt({ secret: process.env.JWT_SECRET, passthrough: true }));
+app.use(jwt({ secret: process.env.JWT_SECRET, passthrough: true }));
 
 // const context = ({ req }) => {
 //   const token = req.headers.authorization || ''

@@ -5,7 +5,7 @@ const knexfile = {
       client: 'mysql2',
       debug: false,
       connection: {
-        host: '192.168.41.182',
+        host: '192.168.41.147',
         port: '3306',
         user: 'root',
         password: 'Ctmd1314',

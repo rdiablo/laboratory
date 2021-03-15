@@ -9,13 +9,9 @@ import { createHttpLink } from 'apollo-link-http'
 import { setContext } from 'apollo-link-context'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import VueCookies from 'vue-cookies'
-// import _ from 'lodash'
-// import fs from 'fs-extra'
-// import { remote, app } from 'electron'
 
 // import gql from 'graphql-tag'
 // import axios from 'axios'
-
 
 import './styles/styles.scss'
 
